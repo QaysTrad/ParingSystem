@@ -13,3 +13,18 @@ db.once('open', () => {
 
 
 let Schema = mongoose.Schema; // Create a mongoose schema 
+
+let studentSchema = new Schema({
+    studentName: { type: String },
+    studebtLevel: { type: String }
+})
+let historySchema = new Schema({
+    student_1: { type: [String] },
+    student_2: { type: [String] }
+})
+
+studentSchema = mongoose.model('studentSchema', studentSchema);
+historySchema = mongoose.model('historySchema', historySchema);
+
+module.exports.studentSchema = studentSchema;
+module.exports.historySchema = historySchema;
