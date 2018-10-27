@@ -1,0 +1,26 @@
+{
+  "name": "paringsystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QaysTrad/ParingSystem.git"
+  },
+  "author": "QaysTrad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QaysTrad/ParingSystem/issues"
+  },
+  "homepage": "https://github.com/QaysTrad/ParingSystem#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.3.4",
+    "nodemon": "^1.18.5",
+    "path": "^0.12.7"
+  }
+}
