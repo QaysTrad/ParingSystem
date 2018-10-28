@@ -16,7 +16,7 @@ let Schema = mongoose.Schema; // Create a mongoose schema
 
 let studentSchema = new Schema({
     studentName: { type: String },
-    studebtLevel: { type: String }
+    studentLevel: { type: String }
 })
 let historySchema = new Schema({
     student_1: { type: [String] },
