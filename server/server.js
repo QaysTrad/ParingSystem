@@ -10,6 +10,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.post('/addStu', handler.addStudent);
 app.get('/getStu', handler.getStudent);
+app.post('/deleteStu', handler.deleteStudent);
+app.post('/updateStu', handler.updateStudent);
 app.get('/*', (req, res) => {
     res.sendFile(path.resolve(path.join(__dirname, '../react-client/build/index.html')))
 })

@@ -22,3 +22,23 @@ exports.getStudent = (req, res) => {
         res.send(data);
     })
 }
+
+exports.deleteStudent = (req, res) => {
+    const id = req.body._id;
+    db.studentSchema.findOneAndRemove({ _id: id }, (err, data) => {
+        if (err)
+            throw err;
+        res.send(data)
+
+    })
+}
+
+exports.updateStudent = (req, res) => {
+    const id = req.body._id;
+    const studentLevel = req.body.studentLevel;
+    db.studentSchema.findOneAndUpdate({ _id: id }, { $set: { studentLevel } }, (err, data) => {
+        if (err)
+            throw err;
+        res.send(data);
+    })
+}
