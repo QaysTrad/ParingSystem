@@ -130,7 +130,7 @@ class AddStudent extends Component {
     addStudent = () => {
         axios.post('/addStu', { studentName: this.state.studentName, studentLevel: this.state.level })
             .then(() => {
-                console.log("done")
+                window.location.reload();
             })
             .catch((err) => {
                 console.log(err)
