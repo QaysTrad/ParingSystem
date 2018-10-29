@@ -170,14 +170,16 @@ class AddStudent extends Component {
         return (
             <Grid container>
                 <Grid style={{ marginBottom: "2%", marginTop: "3%" }}>
-                    <Button variant="contained" style={{
-                        backgroundColor: "#373640",
-                        left: "20%",
-                        width: "100px",
-                        color: "white"
-                    }}>
-                        Back
+                    <a href='/'>
+                        <Button variant="contained" style={{
+                            backgroundColor: "#373640",
+                            left: "20%",
+                            width: "100px",
+                            color: "white"
+                        }}>
+                            Back
                 </Button>
+                    </a>
                 </Grid>
                 <Grid container direction="row" justify="space-evenly" style={{
                     top: "20%",
