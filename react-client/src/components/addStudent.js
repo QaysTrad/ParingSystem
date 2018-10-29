@@ -1,8 +1,31 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Button } from '@material-ui/core';
+import {
+    Grid,
+    TextField,
+    Button,
+    Paper,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    Modal,
+    Typography
+} from '@material-ui/core';
+
 import axios from 'axios';
+
+const CustomTableCell = withStyles(theme => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
 
 const Level = [
     {
@@ -27,12 +50,41 @@ const Level = [
     },
 ];
 
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+    };
+}
+
 const styles = theme => ({
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-    }, level: {
+    },
+    level: {
         width: 300,
+    },
+    table: {
+        minWidth: 1000,
+        marginBottom: "10%",
+        marginTop: "3%"
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default,
+        },
+    },
+    paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
     },
 });
 
@@ -44,16 +96,33 @@ class AddStudent extends Component {
         this.state = {
             studentName: '',
             level: '1',
-            students: []
+            students: [],
+            open: false,
+            id1: '',
+            updateLevel: '1'
         }
     }
-
+    updatedLevel = () => {
+        axios.post('/updateStu', { _id: this.state.id1, studentLevel: this.state.updateLevel })
+            .then(() => {
+                alert('Updated');
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log('err', err);
+            })
+    }
     onChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
     };
     handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    };
+    updateChange = name => event => {
         this.setState({
             [name]: event.target.value,
         });
@@ -65,6 +134,25 @@ class AddStudent extends Component {
             })
             .catch((err) => {
                 console.log(err)
+            })
+    }
+    edit = (id) => {
+        this.setState({
+            id1: id,
+            open: true
+        });
+    }
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+    deleteStudent(id) {
+        axios.post('/deleteStu', { _id: id })
+            .then(() => {
+                alert('Deleted');
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log('err', err);
             })
     }
     componentDidMount() {
@@ -100,7 +188,6 @@ class AddStudent extends Component {
                     <Grid item >
                         <TextField
                             label="Full Name"
-                            placeholder="Full Name"
                             type="text"
                             name="studentName"
                             className={classes.textField}
@@ -143,6 +230,98 @@ class AddStudent extends Component {
                             backgroundColor: "#494949"
                         }} > Add </Button>
                     </Grid>
+                    <Grid container justify="space-evenly">
+                        <Grid item>
+                            <Paper className={classes.root}>
+                                <Table className={classes.table}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <CustomTableCell>NAME</CustomTableCell>
+                                            <CustomTableCell >LEVEL</CustomTableCell>
+                                            <CustomTableCell > ...  </CustomTableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.students.map(row => {
+                                            return (
+                                                <TableRow className={classes.row} key={row._id} >
+                                                    <CustomTableCell component="th" scope="row">
+                                                        {row.studentName}
+                                                    </CustomTableCell>
+                                                    <CustomTableCell numeric>
+                                                        {row.studentLevel}
+                                                    </CustomTableCell>
+                                                    <Button style={{
+                                                        backgroundColor: "#D8B94D",
+                                                        borderRadius: '25px',
+                                                        color: "white",
+                                                        margin: "20px"
+                                                    }} onClick={() => this.edit(row._id)}>Edit</Button>
+
+                                                    <Button onClick={() => this.deleteStudent(row._id)} style={{
+                                                        backgroundColor: "#DA2525",
+                                                        borderRadius: '25px',
+                                                        color: "white",
+                                                        margin: "20px"
+                                                    }}>Delete</Button>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid container>
+                    <Modal
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.open}
+                        onClose={this.handleClose}
+                    >
+                        <div style={getModalStyle()} className={classes.paper}>
+                            <Typography variant="h6" id="modal-title">
+                                Update Level
+                             </Typography>
+                            <Grid item >
+                                <TextField
+                                    id="Standar Level"
+                                    select
+                                    label="Level (1-5)"
+                                    className={classes.textField}
+                                    value={this.state.updateLevel}
+                                    onChange={this.updateChange('updateLevel')}
+                                    SelectProps={{
+                                        native: true,
+                                        MenuProps: {
+                                            className: classes.level,
+                                        },
+                                    }}
+                                    helperText="Please select your level"
+                                    margin="normal"
+                                >
+                                    {Level.map(option => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={this.updatedLevel}
+                                    style={{
+                                        backgroundColor: "#5B5B5B",
+                                        borderRadius: '25px',
+                                        color: "white",
+                                        margin: "20px"
+                                    }}
+                                >
+                                    Update
+                                </Button>
+                            </Grid>
+                        </div>
+                    </Modal>
                 </Grid>
             </Grid>
         )
